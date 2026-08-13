@@ -1,14 +1,68 @@
-const GARAGE={phone:'',whatsapp:'',maps:'',tiktok:''};
-const $=s=>document.querySelectorAll(s);
-const setLinks=(selector,url)=>$(selector).forEach(a=>{if(url){a.href=url;a.target='_blank';a.rel='noopener'}else a.addEventListener('click',e=>{e.preventDefault();document.querySelector('#contact').scrollIntoView({behavior:'smooth'})})});
-setLinks('[data-phone]',GARAGE.phone?'tel:'+GARAGE.phone:'');
-setLinks('[data-whatsapp]',GARAGE.whatsapp?'https://wa.me/'+GARAGE.whatsapp.replace(/\D/g,''):'');
-setLinks('[data-maps]',GARAGE.maps||'');
-setLinks('[data-tiktok]',GARAGE.tiktok||'');
-const menu=document.querySelector('.menu-toggle'),nav=document.querySelector('.nav-links');
-menu?.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',open)});
-document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
+const GARAGE={
+  // Add verified business details here. Do not publish invented information.
+  phone:'',
+  whatsapp:'',
+  maps:'',
+  tiktok:'',
+  address:'Exact address — to be confirmed',
+  hours:'Opening hours — to be confirmed'
+};
+
+const $=(selector,root=document)=>Array.from(root.querySelectorAll(selector));
+const contact=document.querySelector('#contact');
+
+function wireLinks(selector,url,fallback='#contact'){
+  $(selector).forEach(link=>{
+    if(url){
+      link.href=url;
+      if(/^https?:\/\//i.test(url)){link.target='_blank';link.rel='noopener noreferrer';}
+    }else{
+      link.href=fallback;
+      link.addEventListener('click',event=>{
+        event.preventDefault();
+        contact?.scrollIntoView({behavior:'smooth',block:'start'});
+      });
+    }
+  });
+}
+
+const cleanNumber=value=>String(value||'').replace(/\D/g,'');
+wireLinks('[data-phone]',GARAGE.phone?'tel:'+GARAGE.phone:'');
+wireLinks('[data-whatsapp]',GARAGE.whatsapp?'https://wa.me/'+cleanNumber(GARAGE.whatsapp):'');
+wireLinks('[data-maps]',GARAGE.maps||'');
+wireLinks('[data-tiktok]',GARAGE.tiktok||'');
+
+$('[data-phone-text]').forEach(el=>el.textContent=GARAGE.phone||'Phone number — to be confirmed');
+$('[data-address]').forEach(el=>el.textContent=GARAGE.address);
+$('[data-hours]').forEach(el=>el.textContent=GARAGE.hours);
+
+const menu=document.querySelector('.menu-toggle');
+const nav=document.querySelector('.nav-links');
+
+menu?.addEventListener('click',()=>{
+  const open=nav?.classList.toggle('open')??false;
+  menu.setAttribute('aria-expanded',String(open));
+  menu.setAttribute('aria-label',open?'Close navigation':'Open navigation');
+  menu.classList.toggle('active',open);
+});
+
+$('[href^="#"]').forEach(link=>link.addEventListener('click',()=>{
+  if(nav?.classList.contains('open')){
+    nav.classList.remove('open');
+    menu?.setAttribute('aria-expanded','false');
+    menu?.setAttribute('aria-label','Open navigation');
+  }
+}));
+
+document.addEventListener('keydown',event=>{
+  if(event.key==='Escape'&&nav?.classList.contains('open')){
+    nav.classList.remove('open');
+    menu?.setAttribute('aria-expanded','false');
+    menu?.setAttribute('aria-label','Open navigation');
+    menu?.focus();
+  }
+});
+
 document.querySelector('#year').textContent=new Date().getFullYear();
 
-// When the real business details are confirmed, edit only GARAGE above.
-// Example: phone:'+97798XXXXXXXX', whatsapp:'97798XXXXXXXX', maps:'https://maps.google.com/?q=...', tiktok:'https://www.tiktok.com/@...'
+// Keep the configuration above as the single source of truth for future contact updates.
