@@ -1,0 +1,10 @@
+{
+  "name":"Dada Ko Garage",
+  "short_name":"Dada Ko Garage",
+  "description":"Dada Ko Garage — local cycle and bike servicing, repair and maintenance.",
+  "start_url":"./",
+  "display":"standalone",
+  "background_color":"#f3f1ea",
+  "theme_color":"#111111",
+  "icons":[{"src":"favicon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
