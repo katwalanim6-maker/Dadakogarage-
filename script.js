@@ -1,3 +1,4 @@
+(()=>{const l=document.createElement('link');l.rel='stylesheet';l.href='bike-fix.css';document.head.appendChild(l)})();
 const GARAGE={phone:'9713698212',whatsapp:'9829313455',maps:'https://maps.app.goo.gl/RddMcnsaWNeYWa9U9?g_st=ac',tiktok:'https://www.tiktok.com/@dada_ko_garage?_r=1&_t=ZS-98q5NF9pCR2',address:'Tarahara, Itahari, Sunsari, Nepal — near NIC ASIA',hours:'Opening hours — to be confirmed'};
 const $=(s,r=document)=>Array.from(r.querySelectorAll(s));
 const cleanNumber=v=>String(v||'').replace(/\D/g,'');
